@@ -5,20 +5,21 @@
 using std::cin;
 using std::cout;
 using std::endl;
+using std::string;
 
 class c_parser{
 private:
-    string in_file;
-    double f_probe;
-    int bit_resolution;
-    int channel_num;
-    double echo_delay_ch1;
-    double echo_delay_ch2;
-    double fd_filter;
-    double fu_filter;
-    double gain_dband;
-    double gain_uband;
-    string out_file;
+    string in_file;     /**< Path to input file */
+    double f_probe;     /**< Probe frequency */
+    int bit_resolution; /**< Bit resolution */
+    int channel_num;    /**< Number of channels */
+    double echo_delay_ch1;  /**< Echo for channel number one */
+    double echo_delay_ch2;  /**< Echo for channel number two */
+    double fd_filter;   /**< Cutoff frequency of filter */
+    double fu_filter;   /**< Upper frequency of filter */
+    double gain_dband;  /**< Gain of cutoff band */
+    double gain_uband;  /**< Gain of upper band */
+    string out_file;    /**< P{ath to output file */
     
 public:
     
@@ -50,12 +51,14 @@ int main()
     
     c_parser o_parser;
     o_parser.print_all();
+    o_parser.get_bit_resolution();
 
     return 0;
 }
 
 c_parser::c_parser()
 {
+    in_file = "sciezka";
     f_probe = 10.1;
     bit_resolution = 8;
     channel_num = 2;
@@ -75,6 +78,7 @@ c_parser::~c_parser()
 void c_parser::print_all() const
 {
     cout << endl;
+    cout << "in_file: " << in_file << endl;
     cout << "f_probe: " << f_probe << endl;
     cout << "bit_resolution: " << bit_resolution << endl;
     cout << "channel_num: " << channel_num << endl;
@@ -91,13 +95,16 @@ void c_parser::get_bit_resolution()
     std::ifstream par_file;     /**<Handle to data to parse */
     par_file.open("parser.txt", std::ios::binary);
     
+    string sth;
     char mark = par_file.get();
     cout << endl;
-    while (par_file.good())
+    while (mark != 0x20)
     {
-        cout <<mark;
+        sth += mark;
         mark = par_file.get();
     }
     cout << endl << endl;
     par_file.close();
+    if(!sth.compare("in_files"))
+    cout << endl << endl << sth << endl << endl;
 }
