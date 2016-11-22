@@ -1,6 +1,5 @@
 #include "../dataTypes/types.h"
 
-
 class File {
 public:
     File();
