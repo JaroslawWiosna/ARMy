@@ -1,3 +1,6 @@
+#ifndef PARSER_HPP_
+#define PARSER_HPP_
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,6 +14,8 @@ using std::string;
 
 class c_parser{
 private:
+    string configuration_file;     /**< Path to configuration file */
+
     string in_file;     /**< Path to input file */
     double f_probe;     /**< Probe frequency */
     int bit_resolution; /**< Bit resolution */
@@ -26,45 +31,31 @@ private:
 public:
     
     //constructors
-    c_parser();
+    c_parser(string pathToCfgFile);
     
     //destructor
     ~c_parser();
     
     //methods
     void print_all() const;
-    void get_bit_resolution();
-    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
+    void get_values();
+    double get_f_probe();
+    double get_bit_resolution();
+    double get_channel_num();
+    double get_echo_delay_ch1();
+    double get_echo_delay_ch2();
+    double get_fd_filter();
+    double get_fu_filter();
+    double get_gain_dband();
+    double get_gain_uband();
+//    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
                                                                         /**< type -> 1 <- double value */
                                                                         /**< type -> 2 <- string value */
 };
-
-int main()
+c_parser::c_parser(string pathToCfgFile)
 {
-    /*
-    std::ifstream par_file;     //Handle to data to parse 
-    par_file.open("parser.txt", std::ios::binary);
-    
-    char mark = par_file.get();
-    cout << endl;
-    while (par_file.good())
-    {
-        cout <<mark;
-        mark = par_file.get();
-    }
-    cout << endl << endl;
-    par_file.close();
-    */
-    c_parser o_parser;
-    //o_parser.print_all();
-    o_parser.get_bit_resolution();
-    o_parser.print_all();
-    
-    return 0;
-}
+    configuration_file = pathToCfgFile;
 
-c_parser::c_parser()
-{
     in_file = "sciezka";
     f_probe = 10.1;
     bit_resolution = 8;
@@ -97,53 +88,115 @@ void c_parser::print_all() const
     cout << "gain_uband: " << gain_uband << endl;
 }
 
-void c_parser::get_bit_resolution()
+void c_parser::get_values()
 {
-    int ovar = 1;
     std::ifstream par_file;     /**<Handle to data to parse */
-    par_file.open("parser.txt", std::ios::binary);
-    
-    string sth;
-    string value;
-    char mark;
-    cout << endl;
-    do
-    {
-        mark = par_file.get();
-        while (mark != 0x20 && mark != 0x0a)
-        {
-            sth += mark;
-            mark = par_file.get();
+    par_file.open(configuration_file, std::ios::binary);
+
+    string param, equalSign, value;
+    string line;
+
+    while(std::getline(par_file, line)) {
+        par_file >> param >> equalSign >> value;
+
+        // check if the second string (named here as 'b') is equal sign
+	if (equalSign.compare("=") == 0 ) {
+           
+	    // print for debug only :)	
+            //cout << "param=" << param << endl << "value=" << value << endl << endl;
+            
+	    if(!param.compare("in_file")) {
+                this->in_file = std::stod(value);
+	    }
+
+	    if(!param.compare("f_probe")) {
+                this->f_probe = std::stod(value);
+	    }
+
+	    if(!param.compare("bit_resolution")) {
+                this->bit_resolution = std::stod(value);
+	    }
+
+	    if(!param.compare("channel_num")) {
+                this->channel_num = std::stod(value);
+	    }
+
+	    if(!param.compare("echo_delay_ch1")) {
+                this->echo_delay_ch1 = std::stod(value);
+	    }
+
+	    if(!param.compare("echo_delay_ch2")) {
+                this->echo_delay_ch2 = std::stod(value);
+	    }
+
+	    if(!param.compare("fd_filter")) {
+                this->fd_filter = std::stod(value);
+	    }
+
+	    if(!param.compare("fu_filter")) {
+                this->fu_filter = std::stod(value);
+	    }
+
+	    if(!param.compare("gain_dband")) {
+                this->gain_dband = std::stod(value);
+	    }
+
+	    if(!param.compare("gain_uband")) {
+                this->gain_uband = std::stod(value);
+	    }
+
         }
-        if(!sth.compare("f_probe"))
-        {
-            mark = par_file.get();
-            while(!((mark >= 0x30 && mark <= 0x39) || mark == 0x2C || mark == 0x2E))
-            {
-                mark = par_file.get();
-            }
-            while(((mark >= 0x30 && mark <= 0x39) || mark == 0x2C || mark == 0x2E))
-            {
-                value += mark;
-                mark = par_file.get();
-            }
-            this->check_size_of_value(value,&f_probe,1,".");
-            ovar = 0;
-            //bit_resolution = value[0] - 0x30;
-            //cout << endl << endl << sth << " : " << value << endl << endl;
-        }
-        //cout << sth << endl;
-        //cout << endl << endl << sth << " : " << value << endl << endl;
-        sth = "";
-    }
-    while(ovar);
-    //cout << endl << endl << sth << " : " << value << endl << endl;
-    //cout << endl << endl;
+
+    }	
     par_file.close();
-    
-    
 }
 
+double c_parser::get_f_probe() 
+{
+    return (this->f_probe);
+}
+
+double c_parser::get_bit_resolution()
+{
+    return (this->bit_resolution);
+}
+
+double c_parser::get_channel_num()
+{
+    return (this->channel_num);
+}
+
+double c_parser::get_echo_delay_ch1()
+{
+    return (this->echo_delay_ch1);
+}
+
+double c_parser::get_echo_delay_ch2()
+{
+    return (this->echo_delay_ch2);
+}
+
+double c_parser::get_fd_filter()
+{
+    return (this->fd_filter);
+}
+
+double c_parser::get_fu_filter()
+{
+    return (this->fu_filter);
+}
+
+double c_parser::get_gain_dband()
+{
+    return (this->gain_dband);
+}
+
+double c_parser::get_gain_uband()
+{
+    return (this->gain_uband);
+}
+
+/*
 int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
 {    
     if (val.size() == 0)
@@ -196,3 +249,7 @@ int c_parser::check_size_of_value(string & val, void *param, unsigned int type, 
     //cout << eval << endl;
     return 1;
 }
+*/
+#endif // PARSER_HPP_
+
+
