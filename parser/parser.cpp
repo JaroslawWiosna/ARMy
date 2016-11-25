@@ -11,6 +11,8 @@ using std::string;
 
 class c_parser{
 private:
+    string configuration_file;     /**< Path to configuration file */
+
     string in_file;     /**< Path to input file */
     double f_probe;     /**< Probe frequency */
     int bit_resolution; /**< Bit resolution */
@@ -26,20 +28,20 @@ private:
 public:
     
     //constructors
-    c_parser();
+    c_parser(string pathToCfgFile);
     
     //destructor
     ~c_parser();
     
     //methods
     void print_all() const;
-    void get_bit_resolution();
+    void get_values();
     int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
                                                                         /**< type -> 1 <- double value */
                                                                         /**< type -> 2 <- string value */
 };
 
-int main()
+int main(int argc, char* argv[])
 {
     /*
     std::ifstream par_file;     //Handle to data to parse 
@@ -55,16 +57,18 @@ int main()
     cout << endl << endl;
     par_file.close();
     */
-    c_parser o_parser;
+    c_parser o_parser(argv[1]);
     //o_parser.print_all();
-    o_parser.get_bit_resolution();
+    o_parser.get_values();
     o_parser.print_all();
     
     return 0;
 }
 
-c_parser::c_parser()
+c_parser::c_parser(string pathToCfgFile)
 {
+    configuration_file = pathToCfgFile;
+
     in_file = "sciezka";
     f_probe = 10.1;
     bit_resolution = 8;
@@ -97,51 +101,68 @@ void c_parser::print_all() const
     cout << "gain_uband: " << gain_uband << endl;
 }
 
-void c_parser::get_bit_resolution()
+void c_parser::get_values()
 {
     int ovar = 1;
     std::ifstream par_file;     /**<Handle to data to parse */
-    par_file.open("parser.txt", std::ios::binary);
-    
-    string sth;
-    string value;
-    char mark;
-    cout << endl;
-    do
-    {
-        mark = par_file.get();
-        while (mark != 0x20 && mark != 0x0a)
-        {
-            sth += mark;
-            mark = par_file.get();
+    par_file.open(configuration_file, std::ios::binary);
+
+    string param, equalSign, value;
+    string line;
+
+    while(std::getline(par_file, line)) {
+        par_file >> param >> equalSign >> value;
+
+        // check if the second string (named here as 'b') is equal sign
+	if (equalSign.compare("=") == 0 ) {
+           
+	    // print for debug only :)	
+            cout << "param=" << param << endl << "value=" << value << endl << endl;
+            
+	    if(!param.compare("in_file")) {
+                this->in_file = std::stod(value);
+	    }
+
+	    if(!param.compare("f_probe")) {
+                this->f_probe = std::stod(value);
+	    }
+
+	    if(!param.compare("bit_resolution")) {
+                this->bit_resolution = std::stod(value);
+	    }
+
+	    if(!param.compare("channel_num")) {
+                this->channel_num = std::stod(value);
+	    }
+
+	    if(!param.compare("echo_delay_ch1")) {
+                this->echo_delay_ch1 = std::stod(value);
+	    }
+
+	    if(!param.compare("echo_delay_ch2")) {
+                this->echo_delay_ch2 = std::stod(value);
+	    }
+
+	    if(!param.compare("fd_filter")) {
+                this->fd_filter = std::stod(value);
+	    }
+
+	    if(!param.compare("fu_filter")) {
+                this->fu_filter = std::stod(value);
+	    }
+
+	    if(!param.compare("gain_dband")) {
+                this->gain_dband = std::stod(value);
+	    }
+
+	    if(!param.compare("gain_uband")) {
+                this->gain_uband = std::stod(value);
+	    }
+
         }
-        if(!sth.compare("f_probe"))
-        {
-            mark = par_file.get();
-            while(!((mark >= 0x30 && mark <= 0x39) || mark == 0x2C || mark == 0x2E))
-            {
-                mark = par_file.get();
-            }
-            while(((mark >= 0x30 && mark <= 0x39) || mark == 0x2C || mark == 0x2E))
-            {
-                value += mark;
-                mark = par_file.get();
-            }
-            this->check_size_of_value(value,&f_probe,1,".");
-            ovar = 0;
-            //bit_resolution = value[0] - 0x30;
-            //cout << endl << endl << sth << " : " << value << endl << endl;
-        }
-        //cout << sth << endl;
-        //cout << endl << endl << sth << " : " << value << endl << endl;
-        sth = "";
-    }
-    while(ovar);
-    //cout << endl << endl << sth << " : " << value << endl << endl;
-    //cout << endl << endl;
+
+    }	
     par_file.close();
-    
-    
 }
 
 int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
