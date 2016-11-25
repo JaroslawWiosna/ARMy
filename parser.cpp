@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
+#include <limits>
 
 using std::cin;
 using std::cout;
@@ -32,11 +34,15 @@ public:
     //methods
     void print_all() const;
     void get_bit_resolution();
+    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
+                                                                        /**< type -> 1 <- double value */
+                                                                        /**< type -> 2 <- string value */
 };
 
 int main()
 {
-    std::ifstream par_file;     /**<Handle to data to parse */
+    /*
+    std::ifstream par_file;     //Handle to data to parse 
     par_file.open("parser.txt", std::ios::binary);
     
     char mark = par_file.get();
@@ -48,11 +54,12 @@ int main()
     }
     cout << endl << endl;
     par_file.close();
-    
+    */
     c_parser o_parser;
-    o_parser.print_all();
+    //o_parser.print_all();
     o_parser.get_bit_resolution();
-
+    o_parser.print_all();
+    
     return 0;
 }
 
@@ -92,19 +99,100 @@ void c_parser::print_all() const
 
 void c_parser::get_bit_resolution()
 {
+    int ovar = 1;
     std::ifstream par_file;     /**<Handle to data to parse */
     par_file.open("parser.txt", std::ios::binary);
     
     string sth;
-    char mark = par_file.get();
+    string value;
+    char mark;
     cout << endl;
-    while (mark != 0x20)
+    do
     {
-        sth += mark;
         mark = par_file.get();
+        while (mark != 0x20 && mark != 0x0a)
+        {
+            sth += mark;
+            mark = par_file.get();
+        }
+        if(!sth.compare("f_probe"))
+        {
+            mark = par_file.get();
+            while(!((mark >= 0x30 && mark <= 0x39) || mark == 0x2C || mark == 0x2E))
+            {
+                mark = par_file.get();
+            }
+            while(((mark >= 0x30 && mark <= 0x39) || mark == 0x2C || mark == 0x2E))
+            {
+                value += mark;
+                mark = par_file.get();
+            }
+            this->check_size_of_value(value,&f_probe,1,".");
+            ovar = 0;
+            //bit_resolution = value[0] - 0x30;
+            //cout << endl << endl << sth << " : " << value << endl << endl;
+        }
+        //cout << sth << endl;
+        //cout << endl << endl << sth << " : " << value << endl << endl;
+        sth = "";
     }
-    cout << endl << endl;
+    while(ovar);
+    //cout << endl << endl << sth << " : " << value << endl << endl;
+    //cout << endl << endl;
     par_file.close();
-    if(!sth.compare("in_files"))
-    cout << endl << endl << sth << endl << endl;
+    
+    
+}
+
+int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
+{    
+    if (val.size() == 0)
+    {
+        cout << "No valid data to parse" << endl;
+        return 0;
+    }
+    if (type == 0 && val.find(exclude) != std::numeric_limits<std::size_t>::max())
+    {
+        cout << "Incorrect data - double type, should be int" << endl;
+        return 0;
+    }
+    
+    if (type == 0)
+    {
+        int eval = 0;
+        int band = val.size();
+        int *par = (int *)param;
+        for(int i = 0; i < band; ++i)
+        {
+            eval += (val[i]-0x30)*pow(10,band-(i+1));
+        }
+        *par = eval;
+    }
+    else if (type == 1)
+    {
+        double eval = 0.0;
+        double *par = (double *)param;
+        int band = val.size();
+        if (val.find(exclude) != std::numeric_limits<std::size_t>::max())
+        {
+            band = val.find(exclude);
+            for(int i = val.size()-1; i > band; --i)
+            {
+                eval += (val[i]-0x30)*pow(10,band-i);
+            }
+        }
+        for(int i = 0; i < band; ++i)
+        {
+            eval += (val[i]-0x30)*pow(10,band-(i+1));
+        }
+        *par = eval;
+    }
+    else
+    {
+        string *par = (string *)param;
+        //*par = eval;
+    }
+     
+    //cout << eval << endl;
+    return 1;
 }
