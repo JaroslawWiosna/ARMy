@@ -1,3 +1,6 @@
+#ifndef PARSER_HPP_
+#define PARSER_HPP_
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -36,35 +39,10 @@ public:
     //methods
     void print_all() const;
     void get_values();
-    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
+//    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
                                                                         /**< type -> 1 <- double value */
                                                                         /**< type -> 2 <- string value */
 };
-
-int main(int argc, char* argv[])
-{
-    /*
-    std::ifstream par_file;     //Handle to data to parse 
-    par_file.open("parser.txt", std::ios::binary);
-    
-    char mark = par_file.get();
-    cout << endl;
-    while (par_file.good())
-    {
-        cout <<mark;
-        mark = par_file.get();
-    }
-    cout << endl << endl;
-    par_file.close();
-    */
-    c_parser o_parser(argv[1]);
-    //o_parser.print_all();
-    o_parser.get_values();
-    o_parser.print_all();
-    
-    return 0;
-}
-
 c_parser::c_parser(string pathToCfgFile)
 {
     configuration_file = pathToCfgFile;
@@ -164,7 +142,7 @@ void c_parser::get_values()
     }	
     par_file.close();
 }
-
+/*
 int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
 {    
     if (val.size() == 0)
@@ -217,3 +195,7 @@ int c_parser::check_size_of_value(string & val, void *param, unsigned int type, 
     //cout << eval << endl;
     return 1;
 }
+*/
+#endif // PARSER_HPP_
+
+
