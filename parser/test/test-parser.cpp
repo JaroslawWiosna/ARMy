@@ -22,6 +22,7 @@ TEST(Parser, parser1)
     ASSERT_EQ( o_parser.get_fu_filter() , 12.4);
     ASSERT_EQ( o_parser.get_gain_dband() , 2.5);
     ASSERT_EQ( o_parser.get_gain_uband() , 2.8);
+    ASSERT_EQ( o_parser.get_out_file() , "/data/file/outdata.mp3");
 
     ASSERT_FALSE( std::abs(o_parser.get_gain_uband() - 10000000) < eps);
 }

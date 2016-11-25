@@ -48,6 +48,7 @@ public:
     double get_fu_filter();
     double get_gain_dband();
     double get_gain_uband();
+    string get_out_file();
 //    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
                                                                         /**< type -> 1 <- double value */
                                                                         /**< type -> 2 <- string value */
@@ -145,6 +146,10 @@ void c_parser::get_values()
                 this->gain_uband = std::stod(value);
 	    }
 
+	    if(!param.compare("out_file")) {
+                this->out_file = value;
+	    }
+
         }
 
     }	
@@ -196,6 +201,11 @@ double c_parser::get_gain_uband()
     return (this->gain_uband);
 }
 
+string c_parser::get_out_file()
+{
+    return (this->out_file);
+}
+
 /*
 int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
 {    
@@ -243,7 +253,7 @@ int c_parser::check_size_of_value(string & val, void *param, unsigned int type, 
     else
     {
         string *par = (string *)param;
-        //*par = eval;
+        // *par = eval;
     }
      
     //cout << eval << endl;
