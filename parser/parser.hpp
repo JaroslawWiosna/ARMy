@@ -90,7 +90,6 @@ void c_parser::print_all() const
 
 void c_parser::get_values()
 {
-    int ovar = 1;
     std::ifstream par_file;     /**<Handle to data to parse */
     par_file.open(configuration_file, std::ios::binary);
 
