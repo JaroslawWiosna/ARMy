@@ -39,6 +39,7 @@ public:
     //methods
     void print_all() const;
     void get_values();
+    double get_f_probe();
 //    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
                                                                         /**< type -> 1 <- double value */
                                                                         /**< type -> 2 <- string value */
@@ -95,7 +96,7 @@ void c_parser::get_values()
 	if (equalSign.compare("=") == 0 ) {
            
 	    // print for debug only :)	
-            cout << "param=" << param << endl << "value=" << value << endl << endl;
+            //cout << "param=" << param << endl << "value=" << value << endl << endl;
             
 	    if(!param.compare("in_file")) {
                 this->in_file = std::stod(value);
@@ -142,6 +143,13 @@ void c_parser::get_values()
     }	
     par_file.close();
 }
+
+double c_parser::get_f_probe() 
+{
+    return (this->f_probe);
+}
+
+
 /*
 int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
 {    
