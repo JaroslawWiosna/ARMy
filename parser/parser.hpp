@@ -40,6 +40,14 @@ public:
     void print_all() const;
     void get_values();
     double get_f_probe();
+    double get_bit_resolution();
+    double get_channel_num();
+    double get_echo_delay_ch1();
+    double get_echo_delay_ch2();
+    double get_fd_filter();
+    double get_fu_filter();
+    double get_gain_dband();
+    double get_gain_uband();
 //    int check_size_of_value(string & val, void *param, unsigned int type = 0, string exclude = "");    /**< type -> 0 <- int value */
                                                                         /**< type -> 1 <- double value */
                                                                         /**< type -> 2 <- string value */
@@ -149,6 +157,45 @@ double c_parser::get_f_probe()
     return (this->f_probe);
 }
 
+double c_parser::get_bit_resolution()
+{
+    return (this->bit_resolution);
+}
+
+double c_parser::get_channel_num()
+{
+    return (this->channel_num);
+}
+
+double c_parser::get_echo_delay_ch1()
+{
+    return (this->echo_delay_ch1);
+}
+
+double c_parser::get_echo_delay_ch2()
+{
+    return (this->echo_delay_ch2);
+}
+
+double c_parser::get_fd_filter()
+{
+    return (this->fd_filter);
+}
+
+double c_parser::get_fu_filter()
+{
+    return (this->fu_filter);
+}
+
+double c_parser::get_gain_dband()
+{
+    return (this->gain_dband);
+}
+
+double c_parser::get_gain_uband()
+{
+    return (this->gain_uband);
+}
 
 /*
 int c_parser::check_size_of_value(string & val, void *param, unsigned int type, string exclude)
