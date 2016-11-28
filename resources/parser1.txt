@@ -1,0 +1,11 @@
+in_file = "/data/file/data.mp3"
+f_probe = 154.15;
+bit_resolution = 5551;
+channel_num = 2;
+echo_delay_ch1 = 0.0;
+echo_delay_ch2 = 1.1;
+fd_filter = 12.1;
+fu_filter = 12.4;
+gain_dband = 2.5;
+gain_uband = 2.8;
+out_file = "/data/file/outdata.mp3"

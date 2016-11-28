@@ -1,8 +1,15 @@
 #include <lame/lame.h>
 
+#ifndef TYPES_H
+#define TYPES_H
+
 namespace types{
-    typedef struct stream{
-        short * data;
+    struct stream{
+        short * dataL;
+        short * dataR;
         unsigned int size;
+        unsigned int channels;
     } ;
 }
+
+#endif

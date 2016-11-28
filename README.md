@@ -1,5 +1,9 @@
 "# ARMY" 
 
+Install dependencies
+Lame:
+sudo apt-get install libmp3lame-dev
+
 # Do before commit
 git stash; git pull --rebase origin master; git stash pop
 
