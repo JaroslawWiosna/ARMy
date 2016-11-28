@@ -1,8 +1,15 @@
 "# ARMY" 
 
-Install dependencies
-Lame:
+#Install dependencies
+ - Lame:<br />
 sudo apt-get install libmp3lame-dev
+
+#Building
+ - mkdir build
+ - cd build
+ - cmake ../src/
+ - make
+ - ./audio
 
 # Do before commit
 git stash; git pull --rebase origin master; git stash pop
