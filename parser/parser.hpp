@@ -40,8 +40,8 @@ public:
     void print_all() const;
     void get_values();
     double get_f_probe();
-    double get_bit_resolution();
-    double get_channel_num();
+    int get_bit_resolution();
+    int get_channel_num();
     double get_echo_delay_ch1();
     double get_echo_delay_ch2();
     double get_fd_filter();
@@ -115,11 +115,11 @@ void c_parser::get_values()
 	    }
 
 	    if(!param.compare("bit_resolution")) {
-                this->bit_resolution = std::stod(value);
+                this->bit_resolution = std::stoi(value);
 	    }
 
 	    if(!param.compare("channel_num")) {
-                this->channel_num = std::stod(value);
+                this->channel_num = std::stoi(value);
 	    }
 
 	    if(!param.compare("echo_delay_ch1")) {
@@ -165,12 +165,12 @@ double c_parser::get_f_probe()
     return (this->f_probe);
 }
 
-double c_parser::get_bit_resolution()
+int c_parser::get_bit_resolution()
 {
     return (this->bit_resolution);
 }
 
-double c_parser::get_channel_num()
+int c_parser::get_channel_num()
 {
     return (this->channel_num);
 }
