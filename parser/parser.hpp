@@ -147,6 +147,10 @@ void c_parser::get_values()
 	    }
 
 	    if(!param.compare("out_file")) {
+                if (value[0] == 0x22)   /**< " mark */
+                    value.erase(0,1);   /**< Erase " mark */
+                if (value[value.size()-1] == 0x22)
+                    value.erase(value.size()-1,1);
                 this->out_file = value;
 	    }
 
